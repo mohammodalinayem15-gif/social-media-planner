@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media 30-Day Content Planner</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        h1 { margin: 0; font-size: 24px; color: var(--primary); }
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn:hover { background-color: var(--primary-hover); }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .date { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+        .status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .status.pending { background: #fef3c7; color: #d97706; }
+        .status.posted { background: #dcfce7; color: #15803d; }
+        .topic { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .caption { font-size: 14px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.5; }
+        .image-preview {
+            width: 100%;
+            height: 150px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📅 30-Day Auto-Posting Dashboard</h1>
+            <button class="btn" onclick="exportToCSV()">📥 Download CSV for Sheets</button>
+        </header>
+
+        <div class="grid" id="contentGrid">
+            <!-- Dynamic Cards will load here -->
+        </div>
+    </div>
+
+    <script>
+        // Sample 30-Day Content Data (You can replace or sync this with Gemini/API)
+        const posts = [
+            { date: "2026-10-22", topic: "AI Future Trends", caption: "We are watching the future build itself right in front of our eyes. 🤖✨ #tech", image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500", status: "Pending" },
+            { date: "2026-10-23", topic: "Solo Travel Reflection", caption: "Waiting around for the perfect timing is a trap. Go explore! ✈️📖 #travel", image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500", status: "Pending" },
+            { date: "2026-10-24", topic: "Cozy Coffee Shop", caption: "For some of us, home is a corner with a warm brew and a book. ☕ #lifestyle", image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500", status: "Pending" }
+        ];
+
+        function renderDashboard() {
+            const grid = document.getElementById('contentGrid');
+            grid.innerHTML = '';
+            posts.forEach(post => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <div>
+                            <div class="card-header">
+                                <span class="date">📅 ${post.date}</span>
+                                <span class="status ${post.status.toLowerCase()}">${post.status}</span>
+                            </div>
+                            <img src="${post.image}" class="image-preview" alt="Post Image">
+                            <div class="topic">${post.topic}</div>
+                            <div class="caption">${post.caption}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,Date,Topic,Caption,ImageURL,Status\n";
+            posts.forEach(p => {
+                csvContent += `"${p.date}","${p.topic}","${p.caption.replace(/"/g, '""')}","${p.image}","${p.status}"\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "content_planner_30_days.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        renderDashboard();
+    </script>
+</body>
+</html>
